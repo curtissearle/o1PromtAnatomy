@@ -6,20 +6,30 @@ import {
   Paper,
   Typography,
   Button,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 
 const PromptBuilder = () => {
   const [goal, setGoal] = useState("");
-  const [returnFormat, setReturnFormat] = useState("");
+  const [returnFormat, setReturnFormat] = useState(
+    "Return the response formatted using Markdown syntax."
+  );
   const [warnings, setWarnings] = useState("");
   const [contextDump, setContextDump] = useState("");
+  const [customReturnFormat, setCustomReturnFormat] = useState("");
 
   const handleChange = (setter) => (event) => {
     setter(event.target.value);
   };
 
   const handleCopy = () => {
-    const textToCopy = `Goal:\n${goal}\n\nReturn Format:\n${returnFormat}\n\nWarnings:\n${warnings}\n\nContext Dump:\n${contextDump}`;
+    const selectedReturnFormat =
+      returnFormat === "Custom" ? customReturnFormat : returnFormat;
+
+    const textToCopy = `Goal:\n${goal}\n\nReturn Format:\n${selectedReturnFormat}\n\nWarnings:\n${warnings}\n\nContext Dump:\n${contextDump}`;
     navigator.clipboard.writeText(textToCopy);
   };
 
@@ -42,15 +52,60 @@ const PromptBuilder = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                label="Return Format"
-                multiline
-                fullWidth
-                variant="outlined"
-                value={returnFormat}
-                onChange={handleChange(setReturnFormat)}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Return Format</InputLabel>
+                <Select
+                  value={returnFormat}
+                  onChange={handleChange(setReturnFormat)}
+                >
+                  <MenuItem
+                    key="Markdown"
+                    value="Return the response formatted using Markdown syntax."
+                  >
+                    Markdown
+                  </MenuItem>
+                  <MenuItem
+                    key="JSON"
+                    value="Return the response as a well-structured JSON object."
+                  >
+                    JSON
+                  </MenuItem>
+                  <MenuItem
+                    key="HTML"
+                    value="Return the response formatted in valid HTML."
+                  >
+                    HTML
+                  </MenuItem>
+                  <MenuItem
+                    key="Plain Text"
+                    value="Return the response as plain text with no special formatting."
+                  >
+                    Plain Text
+                  </MenuItem>
+                  <MenuItem
+                    key="Bullet List"
+                    value="Return the response as a bullet point list"
+                  >
+                    Bullet List
+                  </MenuItem>
+                  <MenuItem key="Custom" value="Custom">
+                    Custom
+                  </MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
+            {returnFormat === "Custom" && (
+              <Grid item xs={12}>
+                <TextField
+                  label="Custom Return Format"
+                  multiline
+                  fullWidth
+                  variant="outlined"
+                  value={customReturnFormat}
+                  onChange={handleChange(setCustomReturnFormat)}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <TextField
                 label="Warnings"
@@ -77,7 +132,9 @@ const PromptBuilder = () => {
           <Paper elevation={3} style={{ padding: "20px" }}>
             <Typography variant="h6">Output</Typography>
             <Typography variant="body1" style={{ whiteSpace: "pre-line" }}>
-              {`Goal:\n${goal}\n\nReturn Format:\n${returnFormat}\n\nWarnings:\n${warnings}\n\nContext Dump:\n${contextDump}`}
+              {`Goal:\n${goal}\n\nReturn Format:\n${
+                returnFormat === "Custom" ? customReturnFormat : returnFormat
+              }\n\nWarnings:\n${warnings}\n\nContext Dump:\n${contextDump}`}
             </Typography>
             <Button
               variant="contained"
