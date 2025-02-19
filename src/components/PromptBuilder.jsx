@@ -154,11 +154,11 @@ const PromptBuilder = () => {
       >
         Inspired by the blog:{" "}
         <a
-          href="https://medium.com/@niall.mcnulty/writing-an-o1-prompt-that-works-16ee921b5859"
+          href="https://www.latent.space/p/o1-skill-issue"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Writing an o1 Prompt That Works
+          o1 isn’t a chat model
         </a>
       </Typography>
     </Container>
